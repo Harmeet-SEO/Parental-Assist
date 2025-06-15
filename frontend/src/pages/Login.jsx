@@ -1,22 +1,44 @@
-import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Login.css";
-import Navbar from '../components/Navbar';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const res = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      // Save JWT token to localStorage
+      localStorage.setItem("token", data.token);
+
       toast.success("Logged in successfully!");
+      navigate("/"); // ✅ redirect after login
+
+      // Redirect if needed
+      // navigate('/dashboard');
     } catch (error) {
       toast.error(error.message);
     }
@@ -24,8 +46,8 @@ export default function Login() {
 
   return (
     <>
-      <Navbar />
-      <Link to="/" className="home-icon">🏠</Link>
+      <Header />
+
       <main className="login">
         <div className="login-left">
           <img src="/assets/login-family.png" alt="Family illustration" />
@@ -63,6 +85,10 @@ export default function Login() {
             </div>
 
             <button type="submit">Log In</button>
+
+            <p className="form-switch-text">
+              Don’t have an account? <Link to="/signup">Create Account</Link>
+            </p>
           </form>
           <ToastContainer />
         </div>

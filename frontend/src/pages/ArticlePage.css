@@ -1,0 +1,40 @@
+.article-page {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.article-header {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 1.5rem;
+}
+
+.article-header h1 {
+  font-size: 2rem;
+}
+
+.article-header .meta {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.article-image img {
+  width: 100%;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+}
+
+.article-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.related-articles {
+  margin-top: 3rem;
+}
+
+.related-grid {
+  display: flex;
+  gap: 1rem;
+}

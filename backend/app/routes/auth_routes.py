@@ -1,18 +1,16 @@
-#the aim of this route is for authentication, so the users don't log in to the admin dashboard
-
 from flask import Blueprint, request, redirect, session, render_template, flash, url_for
 from werkzeug.security import check_password_hash
-from app import mongo
+from flask import current_app
 
-bp = Blueprint('auth_routes', __name__, url_prefix='/auth')
+auth_bp = Blueprint('auth_routes', __name__, url_prefix='/auth')
 
-@bp.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        admin = mongo.db.admins.find_one({'username': username})
+        admin = current_app.config['DB'].admins.find_one({'username': username})
         if admin and check_password_hash(admin['password'], password):
             session['admin'] = username
             return redirect(url_for('admin_routes.dashboard'))
@@ -21,8 +19,7 @@ def login():
 
     return render_template('auth/login.html')
 
-
-@bp.route('/logout')
+@auth_bp.route('/logout')
 def logout():
     session.pop('admin', None)
     return redirect(url_for('auth_routes.login'))

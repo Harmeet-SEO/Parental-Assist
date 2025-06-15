@@ -1,19 +1,26 @@
-import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./SignUp.css";
-import Navbar from '../components/Navbar';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../firebase';
+import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone_number: "",
+    address: "",
+    userType: "parent",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -23,18 +30,40 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
-    try {
-      await createUserWithEmailAndPassword(auth, formData.email, formData.password);
 
-      await updateProfile(auth.currentUser, {
-        displayName: formData.name
+    try {
+      const res = await fetch("http://localhost:5000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstname: formData.firstname,
+          lastname: formData.lastname,
+          email: formData.email,
+          password: formData.password,
+          phone_number: formData.phone_number,
+          address: formData.address,
+          userType: "parent",
+        }),
       });
 
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+
       toast.success("Account created successfully!");
+      navigate("/login"); // ✅ redirect after signup
+
+      // Optionally redirect to login:
+      // navigate('/login');
     } catch (error) {
       toast.error(error.message);
     }
@@ -42,8 +71,7 @@ export default function SignUp() {
 
   return (
     <>
-      <Navbar />
-      <Link to="/" className="home-icon">🏠</Link>
+      <Header />
 
       <main className="signup">
         <div className="signup-left">
@@ -57,12 +85,38 @@ export default function SignUp() {
         <div className="signup-right">
           <form onSubmit={handleSubmit} className="signup-form">
             <h2>Sign Up</h2>
+            <input
+              type="text"
+              name="firstname"
+              placeholder="First Name"
+              value={formData.firstname}
+              onChange={handleChange}
+              required
+            />
 
             <input
               type="text"
-              name="name"
-              placeholder="Name"
-              value={formData.name}
+              name="lastname"
+              placeholder="Last Name"
+              value={formData.lastname}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="text"
+              name="phone_number"
+              placeholder="Phone Number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              required
+            />
+
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
               onChange={handleChange}
               required
             />
@@ -111,6 +165,9 @@ export default function SignUp() {
             </div>
 
             <button type="submit">Sign Up</button>
+            <p className="form-switch-text">
+              Already have an account? <Link to="/login">Sign In</Link>
+            </p>
           </form>
           <ToastContainer />
         </div>

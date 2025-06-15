@@ -1,12 +1,14 @@
-.login, .signup {
+.login,
+.signup {
   display: flex;
   flex-wrap: wrap; /* enables responsive stacking */
   height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background: #fff;
 }
 
-.login-left, .signup-left {
+.login-left,
+.signup-left {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -16,24 +18,28 @@
   background: #fff;
 }
 
-.login-left img, .signup-left img {
+.login-left img,
+.signup-left img {
   max-width: 400px;
   height: auto;
   margin-bottom: 1.5rem;
 }
 
-.login-message h1, .signup-message h1 {
+.login-message h1,
+.signup-message h1 {
   font-size: 1.8rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
-.login-message p, .signup-message p {
+.login-message p,
+.signup-message p {
   font-size: 1rem;
   color: #555;
 }
 
-.login-right, .signup-right {
+.login-right,
+.signup-right {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -41,11 +47,12 @@
   position: relative;
 }
 
-.login-form, .signup-form {
+.login-form,
+.signup-form {
   background: #ddd;
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -55,7 +62,8 @@
   animation: fadeInUp 0.6s ease both;
 }
 
-.login-form h2, .signup-form h2 {
+.login-form h2,
+.signup-form h2 {
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
@@ -77,7 +85,7 @@
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #007BFF;
+  color: #007bff;
   font-size: 14px;
   user-select: none;
 }
@@ -92,7 +100,7 @@
   padding: 0.6rem;
   border: none;
   border-radius: 999px;
-  background-color: #FF867C;
+  background-color: #ff867c;
   color: white;
   font-size: 1rem;
   cursor: pointer;
@@ -101,7 +109,7 @@
 
 .login-form button:hover,
 .signup-form button:hover {
-  background-color: #FF5C4F;
+  background-color: #ff5c4f;
   transform: scale(1.05);
 }
 
@@ -119,18 +127,16 @@
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 999;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .home-icon:hover {
-  background-color: #FF867C;
+  background-color: #ff867c;
   color: white;
   transform: scale(1.1);
 }
-
-
 
 @keyframes fadeInUp {
   from {
@@ -145,20 +151,91 @@
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
-  .login-left, .signup-left {
+  .login-left,
+  .signup-left {
     flex: 100%;
     order: 2;
     padding: 1rem;
   }
 
-  .login-right, .signup-right {
+  .login-right,
+  .signup-right {
     flex: 100%;
     order: 1;
     padding: 1rem;
   }
 
-  .login-form, .signup-form {
+  .login-form,
+  .signup-form {
     max-width: 90%;
     width: 100%;
   }
+}
+/* === Updated Header (matches homepage layout) === */
+.login-header {
+  background-color: #f0f0f0;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo-search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  padding: 0.5rem;
+  width: 200px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: black;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.signin-btn {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #222;
+  border: 1px solid #888;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.subscribe-btn {
+  padding: 0.5rem 1rem;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.form-switch-text {
+  font-size: 0.9rem;
+  color: #444;
+  margin-top: 0.5rem;
+}
+
+.form-switch-text a {
+  color: #ff5c4f;
+  font-weight: 500;
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.form-switch-text a:hover {
+  text-decoration: underline;
 }

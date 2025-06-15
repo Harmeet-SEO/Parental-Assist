@@ -1,0 +1,30 @@
+.article-card {
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0.5rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.article-card:hover {
+  background: #eaeaea;
+}
+
+.article-card .image-placeholder {
+  background: #ccc;
+  height: 120px;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.article-card h4 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0.2rem;
+}
+
+.article-card .date {
+  font-size: 0.85rem;
+  color: #666;
+}
