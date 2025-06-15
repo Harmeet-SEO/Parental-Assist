@@ -1,0 +1,19 @@
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #fff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+a {
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+button:hover, a:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}

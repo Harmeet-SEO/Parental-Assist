@@ -1,0 +1,74 @@
+.profile-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.profile-container {
+  max-width: 500px;
+  width: 100%;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #FF867C;
+}
+
+.edit-profile-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background-color: #FF867C;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit-profile-btn:hover {
+  background-color: #FF5C4F;
+  transform: scale(1.05);
+}
+.home-icon {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  background-color: #f9f9f9;
+  color: #333;
+  font-size: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 999;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.home-icon:hover {
+  background-color: #FF867C;
+  color: white;
+  transform: scale(1.1);
+}
+
+
