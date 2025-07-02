@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import "./Products.css";
 import productsData from "../data/productsData";
@@ -44,10 +43,13 @@ export default function Products() {
     const matchPrice =
       !filters.price ||
       (filters.price === "low" && product.price < 2000) ||
-      (filters.price === "medium" && product.price >= 2000 && product.price <= 5000) ||
+      (filters.price === "medium" &&
+        product.price >= 2000 &&
+        product.price <= 5000) ||
       (filters.price === "high" && product.price > 5000);
     const matchCategory =
-      !filters.category || product.category.toLowerCase() === filters.category.toLowerCase();
+      !filters.category ||
+      product.category.toLowerCase() === filters.category.toLowerCase();
 
     return matchAge && matchPrice && matchCategory;
   });
@@ -56,14 +58,19 @@ export default function Products() {
     <>
       <Navbar />
       <main className="products-page">
-        <Link to="/" className="home-icon">🏠</Link>
         <h1 className="products-title">✨ Browse Our Curated Products</h1>
-        <p className="products-subtitle">Smart picks to support your child's growth and your parenting journey.</p>
+        <p className="products-subtitle">
+          Smart picks to support your child's growth and your parenting journey.
+        </p>
 
         <div className="filter-panel">
           <div className="filter-group">
             <label htmlFor="age">Age</label>
-            <select name="age" value={filters.age} onChange={handleFilterChange}>
+            <select
+              name="age"
+              value={filters.age}
+              onChange={handleFilterChange}
+            >
               <option value="">All</option>
               <option value="0-2">0-2</option>
               <option value="3-5">3-5</option>
@@ -74,17 +81,25 @@ export default function Products() {
 
           <div className="filter-group">
             <label htmlFor="price">Price</label>
-            <select name="price" value={filters.price} onChange={handleFilterChange}>
+            <select
+              name="price"
+              value={filters.price}
+              onChange={handleFilterChange}
+            >
               <option value="">All</option>
-              <option value="low">Low (&lt; ₹2000)</option>
-              <option value="medium">Medium (₹2000 - ₹5000)</option>
-              <option value="high">High (&gt; ₹5000)</option>
+              <option value="low">Low (&lt; $2000)</option>
+              <option value="medium">Medium ($2000 - $5000)</option>
+              <option value="high">High (&gt; $5000)</option>
             </select>
           </div>
 
           <div className="filter-group">
             <label htmlFor="category">Category</label>
-            <select name="category" value={filters.category} onChange={handleFilterChange}>
+            <select
+              name="category"
+              value={filters.category}
+              onChange={handleFilterChange}
+            >
               <option value="">All</option>
               <option value="toys">Toys</option>
               <option value="books">Books</option>
@@ -103,7 +118,7 @@ export default function Products() {
             >
               <img src={product.image} alt={product.name} />
               <h3>{product.name}</h3>
-              <p>₹{product.price}</p>
+              <p>${product.price}</p>
             </div>
           ))}
         </div>
@@ -111,10 +126,12 @@ export default function Products() {
         {showModal && selectedProduct && (
           <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-              <button className="close-button" onClick={closeModal}>X</button>
+              <button className="close-button" onClick={closeModal}>
+                X
+              </button>
               <img src={selectedProduct.image} alt={selectedProduct.name} />
               <h2>{selectedProduct.name}</h2>
-              <p>Price: ₹{selectedProduct.price}</p>
+              <p>Price: ${selectedProduct.price}</p>
               <p>Category: {selectedProduct.category}</p>
               <p>Age Group: {selectedProduct.ageGroup}</p>
               <p>Description: {selectedProduct.description}</p>
@@ -130,7 +147,6 @@ export default function Products() {
             ↑ Back to Top
           </button>
         )}
-
       </main>
     </>
   );

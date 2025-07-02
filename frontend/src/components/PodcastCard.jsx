@@ -1,9 +1,10 @@
 import React from "react";
 import "./PodcastCard.css";
 
-const PodcastCard = ({ title, duration, author }) => {
+const PodcastCard = ({ title, duration, author, image }) => {
   return (
     <div className="podcast-card">
+      {image && <img src={image} alt={title} className="podcast-thumbnail" />}
       <div className="podcast-card__top">
         <h4>{title}</h4>
         <p className="duration">{duration}</p>
@@ -15,7 +16,6 @@ const PodcastCard = ({ title, duration, author }) => {
             src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
             type="audio/mpeg"
           />
-          Your browser does not support the audio element.
         </audio>
       </div>
     </div>

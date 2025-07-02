@@ -1,74 +1,106 @@
 .profile-page {
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 3rem 1rem;
-  font-family: 'Segoe UI', sans-serif;
+  padding: 2rem;
+  background-color: #f5f7fa;
+  min-height: 100vh;
 }
 
 .profile-container {
-  max-width: 500px;
+  max-width: 650px;
   width: 100%;
-  background: #f9f9f9;
   padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
   text-align: center;
 }
 
+.profile-heading {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
 .profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
+  background: #f9f9f9;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  text-align: center;
 }
 
 .profile-avatar {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #FF867C;
+  margin-bottom: 1rem;
+  border: 3px solid #ddd;
 }
 
-.edit-profile-btn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 999px;
-  background-color: #FF867C;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+.profile-card h2 {
+  margin-bottom: 1rem;
+  color: #444;
 }
 
-.edit-profile-btn:hover {
-  background-color: #FF5C4F;
-  transform: scale(1.05);
-}
-.home-icon {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  width: 40px;
-  height: 40px;
-  background-color: #f9f9f9;
-  color: #333;
-  font-size: 20px;
-  border-radius: 50%;
+.profile-detail {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  z-index: 999;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  gap: 0.6rem;
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
 }
 
-.home-icon:hover {
-  background-color: #FF867C;
+.edit-profile-btn {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  background: #007bff;
   color: white;
-  transform: scale(1.1);
+  font-weight: 500;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
+.edit-profile-btn:hover {
+  background: #0056b3;
+}
 
+.home-icon {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: #333;
+}
+.profile-detail input {
+  margin-left: 0.5rem;
+  padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  width: 60%;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-actions button {
+  background-color: #ff867c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}

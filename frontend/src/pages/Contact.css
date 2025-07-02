@@ -2,15 +2,14 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 }
-
 
 .forum-form {
   background-color: #fff;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -36,14 +35,14 @@
 
 .forum-form input:focus,
 .forum-form textarea:focus {
-  border-color: #FF867C;
+  border-color: #ff867c;
   background-color: #fff;
   outline: none;
 }
 
 .forum-form button {
   padding: 0.9rem;
-  background-color: #FF867C;
+  background-color: #ff867c;
   color: white;
   border: none;
   border-radius: 999px;
@@ -53,7 +52,7 @@
 }
 
 .forum-form button:hover {
-  background-color: #FF5C4F;
+  background-color: #ff5c4f;
   transform: scale(1.05);
 }
 
@@ -68,13 +67,13 @@
   background-color: #fff;
   border-radius: 12px;
   padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .forum-question-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .forum-question-card h3 {

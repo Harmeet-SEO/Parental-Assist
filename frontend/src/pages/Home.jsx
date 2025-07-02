@@ -4,50 +4,64 @@ import ArticleCard from "../components/ArticleCard";
 import { Link } from "react-router-dom";
 import EditorPickCard from "../components/EditorPickCard";
 import PodcastCard from "../components/PodcastCard";
-import Header from "../components/Header";
+import Navbar from "../components/Navbar";
+import HomeBanner from "../components/HomeBanner";
 
 const Home = () => {
   return (
     <div className="homepage">
-      {/* === HEADER === */}
-      <Header />
+      {/* === NAVBAR === */}
+      <Navbar />
+      <HomeBanner />
 
-      <nav className="nav-links">
-        <span>LATEST</span>
-        <span>WORLD</span>
-        <span>SPORTS</span>
-        <span>CULTURE</span>
-        <span>ECONOMY</span>
-      </nav>
-
+      {/* === MAIN CONTENT === */}
       <div className="homepage__content">
+        {/* === LEFT COLUMN === */}
         <div className="left-column">
-          {/* === PODCAST HIGHLIGHT === */}
+          {/* === PODCAST SPOTLIGHT === */}
           <section className="podcast-highlight">
             <h3>🎧 Podcast spotlight</h3>
             <PodcastCard
               title="DAILY MINUTE: Reports from around the world"
               duration="22:14"
               author="Media Studio"
+              image="/assets/podcast1.jpg"
             />
           </section>
+
+          {/* === LEFT ARTICLES === */}
+          {/* <div className="left-articles">
+            <ArticleCard
+              title="Best summer reads for your vacation"
+              date="13 June 2025"
+              image="/assets/article1.jpg"
+            />
+            <ArticleCard
+              title="Footballer leads Argentina to victory"
+              date="12 June 2025"
+              image="/assets/article2.jpg"
+            />
+          </div> */}
         </div>
 
+        {/* === RIGHT COLUMN (FEATURED GRID) === */}
         <div className="right-column">
-          {/* === FEATURED ARTICLES === */}
           <section className="featured-articles">
             <div className="article-grid">
               <ArticleCard
-                title="Best summer reads for your vacation"
-                date="13 June 2025"
+                title="Lost cat found the way back to her home"
+                date="11 June 2025"
+                image="/assets/article3.jpg"
               />
               <ArticleCard
                 title="Footballer leads Argentina to victory"
                 date="12 June 2025"
+                image="/assets/article2.jpg"
               />
               <ArticleCard
-                title="Lost cat found the way back to her home"
-                date="11 June 2025"
+                title="Shoemaker's herb hotdogs"
+                date="9 June 2025"
+                image="/assets/article5.jpg"
               />
             </div>
           </section>
@@ -59,12 +73,25 @@ const Home = () => {
         <h3>Food and Drink</h3>
         <div className="article-row">
           <ArticleCard
-            title="One hour for the next kombucha"
-            date="10 June 2025"
+            title="Cooking on a budget"
+            date="8 June 2025"
+            image="/assets/article6.jpg"
           />
-          <ArticleCard title="Shoemaker's herb hotdogs" date="9 June 2025" />
-          <ArticleCard title="Cooking on a budget" date="8 June 2025" />
-          <ArticleCard title="Best alcohol-free cocktails" date="7 June 2025" />
+          <ArticleCard
+            title="Best alcohol-free cocktails"
+            date="7 June 2025"
+            image="/assets/article7.jpg"
+          />
+          <ArticleCard
+            title="Best summer reads for your vacation"
+            date="13 June 2025"
+            image="/assets/article1.jpg"
+          />
+          <ArticleCard
+            title="Footballer leads Argentina to victory"
+            date="12 June 2025"
+            image="/assets/article2.jpg"
+          />
         </div>
       </section>
 

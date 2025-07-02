@@ -1,17 +1,25 @@
-
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import './Contact.css';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import "./Contact.css";
 
 export default function Contact() {
   const [questions, setQuestions] = useState([
-    { id: 1, title: 'How to manage screen time for kids?', description: 'Looking for tips on balancing screen time and outdoor activities.' },
-    { id: 2, title: 'Best books for early learning?', description: 'What are some great books for 3-5 year old children?' },
+    {
+      id: 1,
+      title: "How to manage screen time for kids?",
+      description:
+        "Looking for tips on balancing screen time and outdoor activities.",
+    },
+    {
+      id: 2,
+      title: "Best books for early learning?",
+      description: "What are some great books for 3-5 year old children?",
+    },
   ]);
 
   const [newQuestion, setNewQuestion] = useState({
-    title: '',
-    description: ''
+    title: "",
+    description: "",
   });
 
   const handleChange = (e) => {
@@ -24,10 +32,10 @@ export default function Contact() {
       const newEntry = {
         id: questions.length + 1,
         title: newQuestion.title,
-        description: newQuestion.description
+        description: newQuestion.description,
       };
       setQuestions([newEntry, ...questions]);
-      setNewQuestion({ title: '', description: '' });
+      setNewQuestion({ title: "", description: "" });
     }
   };
 

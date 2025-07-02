@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
-import './Feedback.css';
+import React, { useState } from "react";
+import Navbar from "../components/Navbar";
+import "./Feedback.css";
 
 export default function Feedback() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
-  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackText, setFeedbackText] = useState("");
   const [feedbackList, setFeedbackList] = useState([
-    { id: 1, rating: 5, text: 'Great platform! Very helpful for parents.' },
-    { id: 2, rating: 4, text: 'Useful features, but can improve UI a bit.' },
+    { id: 1, rating: 5, text: "Great platform! Very helpful for parents." },
+    { id: 2, rating: 4, text: "Useful features, but can improve UI a bit." },
   ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (rating > 0 && feedbackText.trim() !== '') {
+    if (rating > 0 && feedbackText.trim() !== "") {
       const newFeedback = {
         id: feedbackList.length + 1,
         rating,
-        text: feedbackText
+        text: feedbackText,
       };
       setFeedbackList([newFeedback, ...feedbackList]);
       setRating(0);
       setHover(0);
-      setFeedbackText('');
+      setFeedbackText("");
     }
   };
 
@@ -53,8 +53,9 @@ export default function Feedback() {
                     onMouseEnter={() => setHover(ratingValue)}
                     onMouseLeave={() => setHover(0)}
                     style={{
-                      color: ratingValue <= (hover || rating) ? '#FF867C' : '#ccc',
-                      cursor: 'pointer'
+                      color:
+                        ratingValue <= (hover || rating) ? "#FF867C" : "#ccc",
+                      cursor: "pointer",
                     }}
                   >
                     &#9733;
@@ -81,7 +82,8 @@ export default function Feedback() {
           {feedbackList.map((fb) => (
             <div key={fb.id} className="feedback-card">
               <div className="stars">
-                {'★'.repeat(fb.rating)}{'☆'.repeat(5 - fb.rating)}
+                {"★".repeat(fb.rating)}
+                {"☆".repeat(5 - fb.rating)}
               </div>
               <p>{fb.text}</p>
             </div>

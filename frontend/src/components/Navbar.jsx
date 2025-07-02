@@ -1,51 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Navbar.css';
-import { auth } from '../firebase';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaHome } from "react-icons/fa";
+import "./Navbar.css";
+import SearchSuggestions from "./SearchSuggestions";
+import productsData from "../data/productsData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
+  // 🔐 Check if user has token
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
   }, []);
 
-  const handleLogout = async () => {
-    await signOut(auth);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    if (term.length > 1) {
+      const lowerTerm = term.toLowerCase();
+
+      const productResults = productsData
+        .filter((p) => p.name?.toLowerCase().includes(lowerTerm))
+        .map((p) => ({
+          label: p.name,
+          link: `/products?search=${encodeURIComponent(p.name)}`,
+        }));
+
+      const articleResults = [
+        { label: "Lost cat found the way back to her home", link: "/articles" },
+        { label: "10 parenting hacks", link: "/articles" },
+        { label: "Balancing work and family", link: "/articles" },
+      ].filter((a) => a.label.toLowerCase().includes(lowerTerm));
+
+      setSuggestions([...productResults, ...articleResults]);
+    } else {
+      setSuggestions([]);
+    }
   };
 
   return (
     <nav className="top-nav">
-      <div className="logo" data-aos="fade-down" data-aos-duration="800">
+      <div className="logo">
         <img src="/assets/logo-icon.png" alt="logo" className="logo-icon" />
         <span>Parental Assist</span>
       </div>
 
-      <div className="nav-links">
-        <Link to="/features">Features</Link>
-        <Link to="/products">Products</Link>
-        <Link to="/contact">Contact Us</Link>
-        <Link to="/feedback">Feedback</Link> 
+      <div className="search-wrapper">
+        <form onSubmit={handleSearch} className="search-form">
+          <input
+            type="text"
+            placeholder="Search products or articles..."
+            value={searchTerm}
+            onChange={handleInputChange}
+          />
+          <button type="submit">Search</button>
+        </form>
+        <SearchSuggestions
+          results={suggestions}
+          onClose={() => setSuggestions([])}
+        />
+      </div>
 
-        {user ? (
+      <div className="nav-links">
+        <Link to="/">
+          <FaHome size={18} />
+        </Link>
+        <Link to="/products">Products</Link>
+        <Link to="/articles">Articles</Link>
+        <Link to="/podcasts">Podcasts</Link>
+        <Link to="/contact">Contact Us</Link>
+        <Link to="/feedback">Feedback</Link>
+
+        {isLoggedIn ? (
           <>
-            <Link to="/profile">Profile</Link>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+            <Link to="/profile" className="profile-link">
+              <FontAwesomeIcon icon={faUser} className="profile-icon" />
+            </Link>
+
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </>
         ) : (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/signup" className="get-started">Sign Up</Link>
-          </>
+          <Link to="/signup">Sign Up</Link>
         )}
-
-        {/* Home button as last, symbol only */}
-        <Link to="/" className="home-icon-inline">🏠</Link>
       </div>
     </nav>
   );

@@ -8,6 +8,10 @@ import SearchResults from "./pages/SearchResults";
 import SearchDetail from "./pages/SearchDetail";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Contact from "./pages/Contact";
+import Products from "./pages/Products";
+import Profile from "./pages/Profile";
+import Feedback from "./pages/Feedback";
 
 function App() {
   return (
@@ -21,6 +25,13 @@ function App() {
         <Route path="/podcasts" element={<Podcasts />} />
         <Route path="/search" element={<SearchResults />} />
         <Route path="/content/:id" element={<SearchDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/articles" element={<ArticlePage />} />
+        <Route path="/category" element={<CategoryPage />} />
+        <Route path="/podcasts" element={<Podcasts />} />
       </Routes>
     </Router>
   );
