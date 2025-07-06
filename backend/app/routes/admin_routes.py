@@ -1,34 +1,23 @@
+# backend/app/routes/admin_routes.py
 
-#admin routes allow us to view the users and content on the website
-#the dashboard gives us the capability to run CRUD operations with the content
-
-from flask import Blueprint, render_template, request, redirect, session, url_for
-from bson.objectid import ObjectId
+from flask import Blueprint, jsonify
+from bson import ObjectId
 from app import mongo
 
-bp = Blueprint('admin_routes', __name__, url_prefix='/admin')
+admin_routes = Blueprint('admin_routes', __name__)
 
-@bp.route('/dashboard')
-def dashboard():
-    if 'admin' not in session:
-        return redirect(url_for('auth_routes.login'))
+# ✅ Get all users
+@admin_routes.route('/api/admin/users', methods=['GET'])
+def get_users():
     users = list(mongo.db.users.find())
-    return render_template('admin/dashboard.html', users=users)
+    for user in users:
+        user['_id'] = str(user['_id'])
+    return jsonify(users), 200
 
-@bp.route('/delete_user/<user_id>')
-def delete_user(user_id):
-    mongo.db.users.delete_one({'_id': ObjectId(user_id)})
-    return redirect(url_for('admin_routes.dashboard'))
-
-@bp.route('/add_content', methods=['GET', 'POST'])
-def add_content():
-    if request.method == 'POST':
-        content = {
-            'title': request.form['title'],
-            'category': request.form['category'],
-            'body': request.form['body']
-        }
-        mongo.db.content.insert_one(content)
-        return redirect(url_for('admin_routes.dashboard'))
-
-    return render_template('admin/content_form.html')
+# ✅ Get all content
+@admin_routes.route('/api/admin/content', methods=['GET'])
+def get_content():
+    content = list(mongo.db.content.find())
+    for item in content:
+        item['_id'] = str(item['_id'])
+    return jsonify(content), 200
