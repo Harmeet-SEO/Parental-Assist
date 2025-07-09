@@ -6,24 +6,38 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function AddEditContent() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [title, setTitle] = useState("");
 
+  // ✅ Add more fields if you have them
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+
+  // ✅ Fetch existing content if editing
   useEffect(() => {
     if (id) {
-      api.get(`/admin/content/${id}`)
-        .then(res => setTitle(res.data.title))
+      api.get(`/api/admin/content`) // Get all, find by ID in frontend
+        .then(res => {
+          const item = res.data.find(item => item._id === id);
+          if (item) {
+            setTitle(item.title);
+            setBody(item.body || "");
+          }
+        })
         .catch(err => console.error(err));
     }
   }, [id]);
 
+  // ✅ Save content (POST or PUT)
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const payload = { title, body };
+
     if (id) {
-      api.put(`/admin/content/${id}`, { title })
+      api.put(`/api/admin/content/${id}`, payload)
         .then(() => navigate("/admin/content"))
         .catch(err => console.error(err));
     } else {
-      api.post("/admin/content", { title })
+      api.post(`/api/admin/content`, payload)
         .then(() => navigate("/admin/content"))
         .catch(err => console.error(err));
     }
@@ -43,6 +57,17 @@ export default function AddEditContent() {
             required
           />
         </div>
+
+        <div className="mb-3">
+          <label className="form-label">Body</label>
+          <textarea
+            className="form-control"
+            rows="5"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
+        </div>
+
         <button type="submit" className="btn btn-success">
           {id ? "Update" : "Add"} Content
         </button>
