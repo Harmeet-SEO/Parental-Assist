@@ -13,37 +13,44 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const res = await fetch("http://localhost:5000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  // ✅ Hardcoded admin bypass for testing
+  if (email === "admin@example.com" && password === "adminpass") {
+    toast.success("Admin logged in!");
+    navigate("/admin");
+    return; // ✅ skip calling backend
+  }
 
-      const data = await res.json();
+  try {
+    const res = await fetch("http://localhost:5000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!res.ok) {
-        throw new Error(data.error || "Login failed");
-      }
+    const data = await res.json();
 
-      // Save JWT token to localStorage
-      localStorage.setItem("token", data.token);
-
-      toast.success("Logged in successfully!");
-      navigate("/"); // ✅ redirect after login
-
-      // Redirect if needed
-      // navigate('/dashboard');
-    } catch (error) {
-      toast.error(error.message);
+    if (!res.ok) {
+      throw new Error(data.error || "Login failed");
     }
-  };
 
+    localStorage.setItem("token", data.token);
+    toast.success("Logged in successfully!");
+
+    // ✅ If your backend returns role info
+    if (data.role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
   return (
     <>
       <Header />

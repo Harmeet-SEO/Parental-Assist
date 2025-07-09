@@ -12,6 +12,11 @@ import Contact from "./pages/Contact";
 import Products from "./pages/Products";
 import Profile from "./pages/Profile";
 import Feedback from "./pages/Feedback";
+import AdminDashboard from "./pages/AdminDashboard";
+import CreateUser from "./pages/CreateUser"; 
+import ManageUsers from "./pages/ManageUsers";
+import ManageContent from "./pages/ManageContent";
+import AddEditContent from "./pages/AddEditContent";
 
 function App() {
   return (
@@ -32,6 +37,12 @@ function App() {
         <Route path="/articles" element={<ArticlePage />} />
         <Route path="/category" element={<CategoryPage />} />
         <Route path="/podcasts" element={<Podcasts />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/users" element={<ManageUsers />} />
+        <Route path="/admin/create-user" element={<CreateUser />} />
+        <Route path="/admin/content" element={<ManageContent />} />
+        <Route path="/admin/content/add" element={<AddEditContent />} />
+        <Route path="/admin/content/edit/:id" element={<AddEditContent />} />
       </Routes>
     </Router>
   );
