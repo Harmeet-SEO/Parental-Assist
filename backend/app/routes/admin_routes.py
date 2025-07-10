@@ -76,7 +76,10 @@ def create_user():
 
         children = data.get("children", [])
         for child in children:
-            child_doc = {**child, "parent_id": parent_id}
+            child_doc = {
+                **child,
+                "parent_id": parent_id
+            }
             mongo.db.children.insert_one(child_doc)
     else:
         mongo.db.users.insert_one(user_doc)
@@ -98,7 +101,7 @@ def add_content():
     new_item = {
         "title": data.get("title"),
         "body": data.get("body"),
-        "created_at": data.get("created_at")
+        "created_at": datetime.utcnow()
     }
     result = mongo.db.content.insert_one(new_item)
     new_item["_id"] = str(result.inserted_id)
@@ -134,18 +137,16 @@ def dashboard():
     users = list(mongo.db.users.find().sort([('created_at', -1)]).limit(5))
     children = list(mongo.db.children.find())
 
-    # Convert all parent IDs to strings & init children
     parent_map = {}
     for parent in parents:
         parent["_id"] = str(parent["_id"])
         parent["children"] = []
         parent_map[parent["_id"]] = parent
 
-    # Convert child IDs and parent_id to strings, then attach
     for child in children:
         child["_id"] = str(child["_id"])
         if "parent_id" in child:
-            pid = str(child["parent_id"])  # Force parent_id to string
+            pid = str(child["parent_id"])
             if pid in parent_map:
                 parent_map[pid]["children"].append(child)
 
@@ -158,6 +159,7 @@ def dashboard():
         "users": users
     })
 
+# === CHILDREN ===
 
 @admin_routes.route("/api/admin/parents/<parent_id>/children", methods=["POST"])
 def add_child(parent_id):

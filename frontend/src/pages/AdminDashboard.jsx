@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../api";
-import './AdminDashboard.css';
-import { Link } from "react-router-dom";
+import AdminNavbar from "../components/AdminNavbar";  // ✅ Import it
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function AdminDashboard() {
@@ -20,44 +19,39 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4">Admin Dashboard</h1>
-      <p className="mb-4">Welcome, Admin! Below are the latest created users in each category.</p>
+    <div>
+      <AdminNavbar /> {/* ✅ Add navbar here */}
 
-      <div className="mb-4">
-        <h3>Newest Admins</h3>
-        <ul>
-          {admins.map(admin => (
-            <li key={admin._id}>{admin.firstname} {admin.lastname} - {admin.email}</li>
-          ))}
-        </ul>
-      </div>
+      <div className="container py-5">
+        <h1 className="mb-4">Admin Dashboard</h1>
+        <p className="mb-4">Welcome, Admin! Below are the latest created users in each category.</p>
 
-      <div className="mb-4">
-        <h3>Newest Parents</h3>
-        <ul>
-          {parents.map(parent => (
-            <li key={parent._id}>{parent.firstname} {parent.lastname} - {parent.email}</li>
-          ))}
-        </ul>
-      </div>
+        <div className="mb-4">
+          <h3>Newest Admins</h3>
+          <ul>
+            {admins.map(admin => (
+              <li key={admin._id}>{admin.firstname} {admin.lastname} - {admin.email}</li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="mb-4">
-        <h3>Newest Users</h3>
-        <ul>
-          {users.map(user => (
-            <li key={user._id}>{user.firstname} {user.lastname} - {user.email}</li>
-          ))}
-        </ul>
-      </div>
+        <div className="mb-4">
+          <h3>Newest Parents</h3>
+          <ul>
+            {parents.map(parent => (
+              <li key={parent._id}>{parent.firstname} {parent.lastname} - {parent.email}</li>
+            ))}
+          </ul>
+        </div>
 
-      <div className="d-flex gap-3">
-        <Link to="/admin/users" className="btn btn-primary">
-          Manage Users
-        </Link>
-        <Link to="/admin/content" className="btn btn-success">
-          Manage Content
-        </Link>
+        <div className="mb-4">
+          <h3>Newest Users</h3>
+          <ul>
+            {users.map(user => (
+              <li key={user._id}>{user.firstname} {user.lastname} - {user.email}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

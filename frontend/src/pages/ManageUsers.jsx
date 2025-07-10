@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../api";
 import { Link } from "react-router-dom";
+import AdminNavbar from "../components/AdminNavbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function ManageUsers() {
@@ -72,153 +73,157 @@ export default function ManageUsers() {
   };
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between mb-4">
-        <h1>Manage Users</h1>
-        <Link to="/admin/create-user" className="btn btn-primary">Create User</Link>
-      </div>
+    <div>
+      <AdminNavbar />
 
-      <h3>Users</h3>
-      <TableBlock
-        data={users}
-        setSelectedUser={setSelectedUser}
-        handleDelete={handleDelete}
-      />
+      <div className="container py-5">
+        <div className="d-flex justify-content-between mb-4">
+          <h1>Manage Users</h1>
+          <Link to="/admin/create-user" className="btn btn-primary">Create User</Link>
+        </div>
 
-      <h3 className="mt-5">Parents</h3>
-      <TableBlock
-        data={parents}
-        setSelectedUser={setSelectedUser}
-        handleDelete={handleDelete}
-        isParent={true}
-      />
+        <h3>Users</h3>
+        <TableBlock
+          data={users}
+          setSelectedUser={setSelectedUser}
+          handleDelete={handleDelete}
+        />
 
-      <h3 className="mt-5">Admins</h3>
-      <TableBlock
-        data={admins}
-        setSelectedUser={setSelectedUser}
-        handleDelete={handleDelete}
-      />
+        <h3 className="mt-5">Parents</h3>
+        <TableBlock
+          data={parents}
+          setSelectedUser={setSelectedUser}
+          handleDelete={handleDelete}
+          isParent={true}
+        />
 
-      {selectedUser && (
-        <div className="modal show fade d-block" tabIndex="-1">
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
+        <h3 className="mt-5">Admins</h3>
+        <TableBlock
+          data={admins}
+          setSelectedUser={setSelectedUser}
+          handleDelete={handleDelete}
+        />
 
-              <div className="modal-header">
-                <h5 className="modal-title">View / Edit User</h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setSelectedUser(null)}
-                ></button>
-              </div>
+        {selectedUser && (
+          <div className="modal show fade d-block" tabIndex="-1">
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
 
-              <div className="modal-body">
-                {["firstname", "lastname", "email", "phone_number", "address"].map(field => (
-                  <div className="mb-3" key={field}>
-                    <label className="form-label">{field.replace("_", " ").toUpperCase()}</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={selectedUser[field] || ""}
-                      onChange={(e) =>
-                        setSelectedUser({ ...selectedUser, [field]: e.target.value })
-                      }
-                    />
-                  </div>
-                ))}
-
-                <div className="mb-3">
-                  <label className="form-label">User Type</label>
-                  <select
-                    className="form-select"
-                    value={selectedUser.userType || 'user'}
-                    onChange={(e) =>
-                      setSelectedUser({ ...selectedUser, userType: e.target.value })
-                    }
-                  >
-                    <option value="user">User</option>
-                    <option value="parent">Parent</option>
-                    <option value="admin">Admin</option>
-                  </select>
+                <div className="modal-header">
+                  <h5 className="modal-title">View / Edit User</h5>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    onClick={() => setSelectedUser(null)}
+                  ></button>
                 </div>
 
-                {selectedUser.userType === "parent" && (
-                  <>
-                    <h5 className="mt-4">Children</h5>
-                    <ul>
-                      {selectedUser.children && selectedUser.children.map(child => (
-                        <li key={child._id}>
-                          {child.name} - Age: {child.age} - Gender: {child.gender}
-                          <button
-                            className="btn btn-danger btn-sm ms-2"
-                            onClick={() => handleDeleteChild(child._id)}
-                          >
-                            Delete
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <h6 className="mt-3">Add New Child</h6>
-                    <div className="row g-2">
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Name"
-                          value={newChild.name}
-                          onChange={(e) => setNewChild({ ...newChild, name: e.target.value })}
-                        />
-                      </div>
-                      <div className="col">
-                        <input
-                          type="number"
-                          className="form-control"
-                          placeholder="Age"
-                          value={newChild.age}
-                          onChange={(e) => setNewChild({ ...newChild, age: e.target.value })}
-                        />
-                      </div>
-                      <div className="col">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Gender"
-                          value={newChild.gender}
-                          onChange={(e) => setNewChild({ ...newChild, gender: e.target.value })}
-                        />
-                      </div>
-                      <div className="col-auto">
-                        <button className="btn btn-success" onClick={handleAddChild}>Add Child</button>
-                      </div>
+                <div className="modal-body">
+                  {["firstname", "lastname", "email", "phone_number", "address"].map(field => (
+                    <div className="mb-3" key={field}>
+                      <label className="form-label">{field.replace("_", " ").toUpperCase()}</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={selectedUser[field] || ""}
+                        onChange={(e) =>
+                          setSelectedUser({ ...selectedUser, [field]: e.target.value })
+                        }
+                      />
                     </div>
-                  </>
-                )}
-              </div>
+                  ))}
 
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setSelectedUser(null)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSave}
-                >
-                  Save Changes
-                </button>
-              </div>
+                  <div className="mb-3">
+                    <label className="form-label">User Type</label>
+                    <select
+                      className="form-select"
+                      value={selectedUser.userType || 'user'}
+                      onChange={(e) =>
+                        setSelectedUser({ ...selectedUser, userType: e.target.value })
+                      }
+                    >
+                      <option value="user">User</option>
+                      <option value="parent">Parent</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
 
+                  {selectedUser.userType === "parent" && (
+                    <>
+                      <h5 className="mt-4">Children</h5>
+                      <ul>
+                        {selectedUser.children && selectedUser.children.map(child => (
+                          <li key={child._id}>
+                            {child.name} - Age: {child.age} - Gender: {child.gender}
+                            <button
+                              className="btn btn-danger btn-sm ms-2"
+                              onClick={() => handleDeleteChild(child._id)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <h6 className="mt-3">Add New Child</h6>
+                      <div className="row g-2">
+                        <div className="col">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Name"
+                            value={newChild.name}
+                            onChange={(e) => setNewChild({ ...newChild, name: e.target.value })}
+                          />
+                        </div>
+                        <div className="col">
+                          <input
+                            type="number"
+                            className="form-control"
+                            placeholder="Age"
+                            value={newChild.age}
+                            onChange={(e) => setNewChild({ ...newChild, age: e.target.value })}
+                          />
+                        </div>
+                        <div className="col">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Gender"
+                            value={newChild.gender}
+                            onChange={(e) => setNewChild({ ...newChild, gender: e.target.value })}
+                          />
+                        </div>
+                        <div className="col-auto">
+                          <button className="btn btn-success" onClick={handleAddChild}>Add Child</button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setSelectedUser(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={handleSave}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
