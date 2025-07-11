@@ -12,7 +12,7 @@ export default function CreateUser() {
     email: "",
     phone_number: "",
     address: "",
-    userType: "user",
+    userType: "parent",
     children: []
   });
 
@@ -65,7 +65,6 @@ export default function CreateUser() {
               value={form.userType}
               onChange={(e) => setForm({ ...form, userType: e.target.value })}
             >
-              <option value="user">User</option>
               <option value="parent">Parent</option>
               <option value="admin">Admin</option>
             </select>

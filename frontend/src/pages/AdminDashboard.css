@@ -1,4 +1,49 @@
-/* src/pages/AdminDashboard.css */
 .admin-dashboard {
-  padding: 2rem;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  min-height: 100vh;
+  border-right: 1px solid #eee;
+}
+
+.sidebar h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.sidebar .nav-link {
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+  text-decoration: underline;
+}
+
+.card-soft {
+  background: #fff;
+  border-radius: 16px;
+}
+
+.bg-light-pink {
+  background: #fde2e2;
+}
+
+.bg-light-yellow {
+  background: #fff9db;
+}
+
+.bg-light-green {
+  background: #dbf6e9;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
 }

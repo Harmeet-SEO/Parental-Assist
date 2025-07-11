@@ -33,7 +33,7 @@ export default function ManageContent() {
       <div className="container py-5">
         <div className="d-flex justify-content-between mb-4">
           <h1>Manage Content</h1>
-          <Link to="/admin/add-edit-content" className="btn btn-primary h-auto">
+          <Link to="/admin/content/add" className="btn btn-primary h-auto">
             Add New Content
           </Link>
         </div>

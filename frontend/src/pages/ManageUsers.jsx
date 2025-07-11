@@ -5,7 +5,6 @@ import AdminNavbar from "../components/AdminNavbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function ManageUsers() {
-  const [users, setUsers] = useState([]);
   const [parents, setParents] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -18,7 +17,6 @@ export default function ManageUsers() {
   const fetchAll = () => {
     api.get("/api/admin/dashboard")
       .then(res => {
-        setUsers(res.data.users);
         setParents(res.data.parents);
         setAdmins(res.data.admins);
       })
@@ -82,14 +80,7 @@ export default function ManageUsers() {
           <Link to="/admin/create-user" className="btn btn-primary">Create User</Link>
         </div>
 
-        <h3>Users</h3>
-        <TableBlock
-          data={users}
-          setSelectedUser={setSelectedUser}
-          handleDelete={handleDelete}
-        />
-
-        <h3 className="mt-5">Parents</h3>
+        <h3>Parents</h3>
         <TableBlock
           data={parents}
           setSelectedUser={setSelectedUser}
@@ -137,12 +128,11 @@ export default function ManageUsers() {
                     <label className="form-label">User Type</label>
                     <select
                       className="form-select"
-                      value={selectedUser.userType || 'user'}
+                      value={selectedUser.userType || 'parent'}
                       onChange={(e) =>
                         setSelectedUser({ ...selectedUser, userType: e.target.value })
                       }
                     >
-                      <option value="user">User</option>
                       <option value="parent">Parent</option>
                       <option value="admin">Admin</option>
                     </select>

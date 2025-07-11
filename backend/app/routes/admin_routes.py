@@ -7,17 +7,16 @@ admin_routes = Blueprint("admin_routes", __name__)
 
 # === USERS ===
 
-@admin_routes.route("/api/admin/users", methods=["GET"])
-def get_users():
-    users = list(mongo.db.users.find())
-    for user in users:
-        user["_id"] = str(user["_id"])
-    return jsonify(users), 200
-
 @admin_routes.route("/api/admin/users/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
-    result = mongo.db.users.delete_one({"_id": ObjectId(user_id)})
-    if result.deleted_count == 1:
+    collections = ["admins", "parents"]
+    deleted = False
+    for coll in collections:
+        result = mongo.db[coll].delete_one({"_id": ObjectId(user_id)})
+        if result.deleted_count == 1:
+            deleted = True
+            break
+    if deleted:
         return jsonify({"message": "User deleted"})
     return jsonify({"error": "User not found"}), 404
 
@@ -27,8 +26,7 @@ def update_user(user_id):
     new_type = data.get("userType")
 
     found_in = None
-    collections = ["users", "admins", "parents"]
-    for coll in collections:
+    for coll in ["admins", "parents"]:
         user = mongo.db[coll].find_one({"_id": ObjectId(user_id)})
         if user:
             found_in = coll
@@ -46,17 +44,15 @@ def update_user(user_id):
 
     if new_type == "admin":
         mongo.db.admins.insert_one(new_doc)
-    elif new_type == "parent":
-        mongo.db.parents.insert_one(new_doc)
     else:
-        mongo.db.users.insert_one(new_doc)
+        mongo.db.parents.insert_one(new_doc)
 
     return jsonify({"message": "User type updated"}), 200
 
 @admin_routes.route("/api/admin/create_user", methods=["POST"])
 def create_user():
     data = request.json
-    userType = data.get("userType", "user")
+    userType = data.get("userType", "parent")
 
     user_doc = {
         "firstname": data.get("firstname"),
@@ -70,21 +66,66 @@ def create_user():
 
     if userType == "admin":
         mongo.db.admins.insert_one(user_doc)
-    elif userType == "parent":
+    else:
         parent_result = mongo.db.parents.insert_one(user_doc)
         parent_id = parent_result.inserted_id
 
         children = data.get("children", [])
         for child in children:
-            child_doc = {
-                **child,
-                "parent_id": parent_id
-            }
+            child_doc = {**child, "parent_id": parent_id}
             mongo.db.children.insert_one(child_doc)
-    else:
-        mongo.db.users.insert_one(user_doc)
 
     return jsonify({"message": "User created"}), 201
+
+# === DASHBOARD ===
+
+@admin_routes.route("/api/admin/dashboard", methods=["GET"])
+def dashboard():
+    admins = list(mongo.db.admins.find().sort([('created_at', -1)]).limit(5))
+    parents = list(mongo.db.parents.find().sort([('created_at', -1)]).limit(5))
+    children = list(mongo.db.children.find())
+
+    parent_map = {}
+    for parent in parents:
+        parent["_id"] = str(parent["_id"])
+        parent["children"] = []
+        parent_map[parent["_id"]] = parent
+
+    for child in children:
+        child["_id"] = str(child["_id"])
+        if "parent_id" in child:
+            pid = str(child["parent_id"])
+            if pid in parent_map:
+                parent_map[pid]["children"].append(child)
+
+    for u in admins:
+        u["_id"] = str(u["_id"])
+
+    return jsonify({
+        "admins": admins,
+        "parents": parents
+    })
+
+# === CHILDREN ===
+
+@admin_routes.route("/api/admin/parents/<parent_id>/children", methods=["POST"])
+def add_child(parent_id):
+    data = request.json
+    child_doc = {
+        "name": data.get("name"),
+        "age": data.get("age"),
+        "gender": data.get("gender"),
+        "parent_id": ObjectId(parent_id)
+    }
+    mongo.db.children.insert_one(child_doc)
+    return jsonify({"message": "Child added"}), 201
+
+@admin_routes.route("/api/admin/children/<child_id>", methods=["DELETE"])
+def delete_child(child_id):
+    result = mongo.db.children.delete_one({"_id": ObjectId(child_id)})
+    if result.deleted_count == 1:
+        return jsonify({"message": "Child deleted"})
+    return jsonify({"error": "Child not found"}), 404
 
 # === CONTENT ===
 
@@ -127,55 +168,3 @@ def delete_content(content_id):
     if result.deleted_count == 1:
         return jsonify({"message": "Content deleted"})
     return jsonify({"error": "Content not found"}), 404
-
-# === DASHBOARD ===
-
-@admin_routes.route("/api/admin/dashboard", methods=["GET"])
-def dashboard():
-    admins = list(mongo.db.admins.find().sort([('created_at', -1)]).limit(5))
-    parents = list(mongo.db.parents.find().sort([('created_at', -1)]).limit(5))
-    users = list(mongo.db.users.find().sort([('created_at', -1)]).limit(5))
-    children = list(mongo.db.children.find())
-
-    parent_map = {}
-    for parent in parents:
-        parent["_id"] = str(parent["_id"])
-        parent["children"] = []
-        parent_map[parent["_id"]] = parent
-
-    for child in children:
-        child["_id"] = str(child["_id"])
-        if "parent_id" in child:
-            pid = str(child["parent_id"])
-            if pid in parent_map:
-                parent_map[pid]["children"].append(child)
-
-    for u in admins + users:
-        u["_id"] = str(u["_id"])
-
-    return jsonify({
-        "admins": admins,
-        "parents": parents,
-        "users": users
-    })
-
-# === CHILDREN ===
-
-@admin_routes.route("/api/admin/parents/<parent_id>/children", methods=["POST"])
-def add_child(parent_id):
-    data = request.json
-    child_doc = {
-        "name": data.get("name"),
-        "age": data.get("age"),
-        "gender": data.get("gender"),
-        "parent_id": ObjectId(parent_id)
-    }
-    mongo.db.children.insert_one(child_doc)
-    return jsonify({"message": "Child added"}), 201
-
-@admin_routes.route("/api/admin/children/<child_id>", methods=["DELETE"])
-def delete_child(child_id):
-    result = mongo.db.children.delete_one({"_id": ObjectId(child_id)})
-    if result.deleted_count == 1:
-        return jsonify({"message": "Child deleted"})
-    return jsonify({"error": "Child not found"}), 404
