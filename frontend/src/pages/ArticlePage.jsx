@@ -1,128 +1,82 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { api } from "../api";
 import "./ArticlePage.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
-const ArticlePage = () => {
+export default function ArticlePage() {
+  const [articles, setArticles] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterTag, setFilterTag] = useState("");
+
+  useEffect(() => {
+    api.get("/api/admin/articles")
+      .then(res => {
+        setArticles(res.data || []);
+      })
+      .catch(console.error);
+  }, []);
+
+  const filteredArticles = articles.filter(article => {
+    const matchesSearch =
+      article.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.summary?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      article.body?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesTag =
+      !filterTag || (article.tags && article.tags.toLowerCase().includes(filterTag.toLowerCase()));
+
+    return matchesSearch && matchesTag;
+  });
+
   return (
-    <>
-      <Navbar />
-      <div className="article-container">
-        <div className="article-header">
-          <span className="category">WORLD</span>
-          <h1>Lost cat found the way back to her home</h1>
-          <p className="article-meta">
-            By John Doe · 13 June 2025 · 3 min read
-          </p>
+    <main className="articles-page container py-5">
+      <h1 className="mb-4">Latest Articles</h1>
 
-          <div className="article-social">
-            <i>🔗</i>
-            <i>🐦</i>
-            <i>📘</i>
-            <i>📤</i>
-          </div>
-        </div>
-
-        <img
-          src="/assets/article1.jpg"
-          alt="Lost cat"
-          className="article-image"
+      <div className="filters mb-4">
+        <input
+          className="form-control mb-2"
+          placeholder="Search articles..."
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
         />
 
-        <div className="article-content">
-          <p>
-            A cat that had been missing for weeks surprised everyone after
-            finding her way home across several miles. The family was
-            overwhelmed with joy and couldn’t believe how their furry friend
-            managed to navigate her way back.
-          </p>
-
-          <p>
-            Despite the distance, the cat made her way back, guided by instinct.
-            Many believe pets have a sixth sense that helps them reconnect with
-            their loved ones, even across long distances.
-          </p>
-
-          <p>
-            Local news outlets praised the story, calling it a feel-good
-            headline everyone needed. But beyond the headlines, this
-            heartwarming journey holds some important parenting lessons too.
-          </p>
-
-          <p>
-            At Parental Assist, we believe that small stories like these can be
-            used to teach children values such as empathy, responsibility, and
-            emotional connection. Talking to your kids about what this cat went
-            through, and how her family welcomed her back, can be a great way to
-            introduce the topic of caring for others — whether pets, friends, or
-            family.
-          </p>
-
-          <p>
-            You can also use this moment to involve your children in simple,
-            caring tasks — like feeding pets, checking water bowls, or helping
-            with lost-pet posters in your neighborhood. These experiences not
-            only build character but also nurture emotional intelligence early
-            on.
-          </p>
-
-          <p>
-            Want to turn this into a learning opportunity? Try asking your
-            child:
-            <ul>
-              <li>“What do you think the cat felt while she was lost?”</li>
-              <li>“How would you help a pet if it was scared?”</li>
-              <li>“Why is it important to care for animals and people?”</li>
-            </ul>
-          </p>
-
-          <p>
-            Moments like these are more than just news — they’re everyday
-            reminders of love, resilience, and the importance of family. And
-            that makes them perfect for every Parental Assist home.
-          </p>
-
-          <div className="related-images">
-            <img src="/assets/article2.jpg" alt="Image 1" />
-            <img src="/assets/article3.jpg" alt="Image 2" />
-          </div>
-        </div>
-
-        {/* Comments */}
-        <div className="comments-section">
-          <h3>Comments</h3>
-          <input type="text" placeholder="Add your thoughts..." />
-          <div className="reaction-icons">
-            <button>👍</button>
-            <button>👎</button>
-          </div>
-        </div>
-
-        {/* Related Articles */}
-        <div className="related-articles">
-          <h3>Related</h3>
-          <div className="articles-grid">
-            <div className="article-card">
-              <img src="/assets/article4.jpg" alt="shelter" />
-              <h4>All pets from shelter were adopted</h4>
-              <p>11 June 2025</p>
-            </div>
-            <div className="article-card">
-              <img src="/assets/article5.jpg" alt="cycling" />
-              <h4>Cycling competition made history</h4>
-              <p>10 June 2025</p>
-            </div>
-            <div className="article-card">
-              <img src="/assets/article6.jpg" alt="budget" />
-              <h4>Cooking on budget</h4>
-              <p>9 June 2025</p>
-            </div>
-          </div>
-        </div>
+        <input
+          className="form-control"
+          placeholder="Filter by tag..."
+          value={filterTag}
+          onChange={e => setFilterTag(e.target.value)}
+        />
       </div>
-      <Footer />
-    </>
-  );
-};
 
-export default ArticlePage;
+      <div className="row">
+        {filteredArticles.length === 0 && (
+          <p>No articles match your criteria.</p>
+        )}
+
+        {filteredArticles.map(article => (
+          <div key={article._id} className="col-md-6 col-lg-4 mb-4">
+            <div className="card h-100 shadow-sm">
+              {article.header_image && (
+                <img
+                  src={article.header_image}
+                  alt={article.title}
+                  className="card-img-top"
+                />
+              )}
+
+              <div className="card-body">
+                <h5 className="card-title">{article.title}</h5>
+                <p className="text-muted mb-1">
+                  By {article.author} | {article.date_posted}
+                </p>
+                <p className="card-text">{article.summary}</p>
+                {article.tags && (
+                  <small className="text-muted">Tags: {article.tags}</small>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  );
+}

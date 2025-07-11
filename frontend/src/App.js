@@ -17,6 +17,7 @@ import CreateUser from "./pages/CreateUser";
 import ManageUsers from "./pages/ManageUsers";
 import ManageContent from "./pages/ManageContent";
 import AddEditContent from "./pages/AddEditContent";
+import AddEditArticle from "./pages/AddEditArticle";
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
         <Route path="/admin/content" element={<ManageContent />} />
         <Route path="/admin/content/add" element={<AddEditContent />} />
         <Route path="/admin/content/edit/:id" element={<AddEditContent />} />
+        <Route path="/admin/articles/add" element={<AddEditArticle />} />
+        <Route path="/admin/articles/edit/:id" element={<AddEditArticle />} />
       </Routes>
     </Router>
   );

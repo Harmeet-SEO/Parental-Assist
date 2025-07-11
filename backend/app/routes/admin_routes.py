@@ -2,8 +2,17 @@ from flask import Blueprint, jsonify, request
 from bson import ObjectId
 from datetime import datetime
 from app import mongo
+import os
+from flask import request, jsonify
+from werkzeug.utils import secure_filename
+from flask import request, jsonify, current_app
 
 admin_routes = Blueprint("admin_routes", __name__)
+UPLOAD_FOLDER = "static/uploads"
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # === USERS ===
 
@@ -168,3 +177,82 @@ def delete_content(content_id):
     if result.deleted_count == 1:
         return jsonify({"message": "Content deleted"})
     return jsonify({"error": "Content not found"}), 404
+
+# === ARTICLES ===
+
+@admin_routes.route("/api/admin/articles", methods=["GET"])
+def get_articles():
+    articles = list(mongo.db.articles.find().sort([("date_posted", -1)]))
+    for item in articles:
+        item["_id"] = str(item["_id"])
+    return jsonify(articles), 200
+
+@admin_routes.route("/api/admin/articles", methods=["POST"])
+def add_article():
+    data = request.json
+    article = {
+        "author": data.get("author"),
+        "date_posted": data.get("date_posted"),
+        "header_image": data.get("header_image"),
+        "title": data.get("title"),
+        "summary": data.get("summary"),
+        "body": data.get("body"),
+        "tags": data.get("tags"),
+        "created_at": datetime.utcnow()
+    }
+    result = mongo.db.articles.insert_one(article)
+    article["_id"] = str(result.inserted_id)
+    return jsonify(article), 201
+
+@admin_routes.route("/api/admin/articles/<article_id>", methods=["PUT"])
+def update_article(article_id):
+    data = request.json
+    result = mongo.db.articles.update_one(
+        {"_id": ObjectId(article_id)},
+        {"$set": {
+            "author": data.get("author"),
+            "date_posted": data.get("date_posted"),
+            "header_image": data.get("header_image"),
+            "title": data.get("title"),
+            "summary": data.get("summary"),
+            "body": data.get("body"),
+            "tags": data.get("tags")
+        }}
+    )
+    if result.matched_count == 1:
+        return jsonify({"message": "Article updated"})
+    return jsonify({"error": "Article not found"}), 404
+
+@admin_routes.route("/api/admin/articles/<article_id>", methods=["DELETE"])
+def delete_article(article_id):
+    result = mongo.db.articles.delete_one({"_id": ObjectId(article_id)})
+    if result.deleted_count == 1:
+        return jsonify({"message": "Article deleted"})
+    return jsonify({"error": "Article not found"}), 404
+
+@admin_routes.route("/api/admin/upload", methods=["POST"])
+def upload_image():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join("static/uploads", filename)
+    file.save(filepath)
+
+    # ⬇️ Build the FULL URL
+    base_url = request.host_url.rstrip('/')
+    file_url = f"{base_url}/static/uploads/{filename}"
+
+    return jsonify({"url": file_url}), 200
+
+@admin_routes.route("/api/admin/articles/<article_id>", methods=["GET"])
+def get_article(article_id):
+    article = mongo.db.articles.find_one({"_id": ObjectId(article_id)})
+    if article:
+        article["_id"] = str(article["_id"])
+        return jsonify(article)
+    return jsonify({"error": "Article not found"}), 404
