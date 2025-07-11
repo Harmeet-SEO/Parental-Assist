@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { api } from "../api";
+import { useNavigate } from "react-router-dom";
 import "./ArticlePage.css";
 
 export default function ArticlePage() {
   const [articles, setArticles] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterTag, setFilterTag] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get("/api/admin/articles")
@@ -53,7 +55,12 @@ export default function ArticlePage() {
         )}
 
         {filteredArticles.map(article => (
-          <div key={article._id} className="col-md-6 col-lg-4 mb-4">
+          <div
+            key={article._id}
+            className="col-md-6 col-lg-4 mb-4"
+            onClick={() => navigate(`/article/${article._id}`)}
+            style={{ cursor: "pointer" }}
+          >
             <div className="card h-100 shadow-sm">
               {article.header_image && (
                 <img

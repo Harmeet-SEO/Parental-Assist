@@ -1,0 +1,75 @@
+.article-detail {
+  font-family: 'Georgia', serif;
+  color: #333;
+}
+
+.article-hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.article-hero .overlay {
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  padding: 40px;
+  width: 100%;
+}
+
+.article-hero h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.byline {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.article-body {
+  padding: 40px 20px;
+  max-width: 800px;
+}
+
+.article-summary {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.article-content {
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.article-meta {
+  margin-bottom: 30px;
+}
+
+.article-actions {
+  margin-bottom: 40px;
+}
+
+.btn {
+  background: none;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.article-comments textarea {
+  width: 100%;
+  min-height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.btn-comment {
+  background: #333;
+  color: #fff;
+  border: none;
+}
