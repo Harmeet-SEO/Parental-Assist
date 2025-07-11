@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import { api } from "../api";
 import "./ArticleDetail.css";
 
+// If you use Font Awesome:
+import { FaHeart, FaShareAlt, FaFacebook, FaTwitter } from "react-icons/fa";
+
 export default function ArticleDetail() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
@@ -44,14 +47,35 @@ export default function ArticleDetail() {
         </div>
 
         <div className="article-actions">
-          <button className="btn btn-like">❤️ Like</button>
-          <button className="btn btn-share">🔗 Share</button>
+          <button className="btn-action">
+            <FaHeart /> Like
+          </button>
+          <button className="btn-action">
+            <FaShareAlt /> Share
+          </button>
+
+          <div className="share-icons">
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${window.location.href}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaTwitter />
+            </a>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebook />
+            </a>
+          </div>
         </div>
 
         <div className="article-comments">
           <h3>Comments</h3>
           <textarea placeholder="Write a comment..." />
-          <button className="btn btn-comment">Post Comment</button>
+          <button className="btn-comment">Post Comment</button>
         </div>
       </section>
     </main>
