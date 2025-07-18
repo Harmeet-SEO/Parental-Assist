@@ -13,6 +13,7 @@ import {
   faSave,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import ChatBot from "../components/ChatBot";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -68,6 +69,7 @@ export default function Profile() {
       <Link to="/" className="home-icon">
         🏠
       </Link>
+      <ChatBot />
 
       <main className="profile-page">
         <div className="profile-container">

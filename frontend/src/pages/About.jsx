@@ -1,11 +1,13 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import "./About.css";
+import ChatBot from "../components/ChatBot";
 
 export default function About() {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <main className="about">
         <section className="about-content">
           <h1 className="about-title">About Parental Assist</h1>

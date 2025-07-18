@@ -6,6 +6,7 @@ import EditorPickCard from "../components/EditorPickCard";
 import PodcastCard from "../components/PodcastCard";
 import Navbar from "../components/Navbar";
 import HomeBanner from "../components/HomeBanner";
+import ChatBot from "../components/ChatBot";
 
 const Home = () => {
   return (
@@ -13,7 +14,7 @@ const Home = () => {
       {/* === NAVBAR === */}
       <Navbar />
       <HomeBanner />
-
+      <ChatBot />
       {/* === MAIN CONTENT === */}
       <div className="homepage__content">
         {/* === LEFT COLUMN === */}

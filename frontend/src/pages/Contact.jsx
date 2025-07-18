@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import "./Contact.css";
+import ChatBot from "../components/ChatBot";
 
 export default function Contact() {
   const [questions, setQuestions] = useState([
@@ -42,6 +43,7 @@ export default function Contact() {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <main className="contact-page">
         <h1>Community Forum</h1>
 

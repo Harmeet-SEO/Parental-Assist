@@ -2,11 +2,13 @@ import React from "react";
 import "./ArticlePage.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ChatBot from "../components/ChatBot";
 
 const ArticlePage = () => {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <div className="article-container">
         <div className="article-header">
           <span className="category">WORLD</span>

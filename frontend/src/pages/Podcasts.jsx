@@ -2,6 +2,7 @@ import React from "react";
 import "./podcasts.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import ChatBot from "../components/ChatBot";
 
 const Podcasts = () => {
   const podcasts = [
@@ -55,6 +56,7 @@ const Podcasts = () => {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <div className="podcast-container">
         <h1>Podcasts</h1>
         <p>

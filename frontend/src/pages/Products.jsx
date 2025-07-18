@@ -3,6 +3,7 @@ import "./Products.css";
 import productsData from "../data/productsData";
 import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
+import ChatBot from "../components/ChatBot";
 
 export default function Products() {
   const [filters, setFilters] = useState({ age: "", price: "", category: "" });
@@ -57,6 +58,7 @@ export default function Products() {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <main className="products-page">
         <h1 className="products-title">✨ Browse Our Curated Products</h1>
         <p className="products-subtitle">
