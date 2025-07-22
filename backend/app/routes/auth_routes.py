@@ -1,6 +1,5 @@
-from flask import Blueprint, request, redirect, session, render_template, flash, url_for
+from flask import Blueprint, request, redirect, session, render_template, flash, url_for, current_app
 from werkzeug.security import check_password_hash
-from app import mongo
 
 auth_bp = Blueprint('auth_routes', __name__, url_prefix='/auth')
 

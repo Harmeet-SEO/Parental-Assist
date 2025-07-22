@@ -1,105 +1,36 @@
-.article-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: Arial, sans-serif;
+.articles-page h1 {
+  font-weight: 700;
 }
 
-.article-header h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+.articles-page .card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
 }
 
-.article-meta {
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 1rem;
+.articles-page .card:hover {
+  transform: translateY(-4px);
 }
 
-.article-social {
-  font-size: 1.2rem;
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.article-image {
-  width: 100%;
-  height: 300px;
+.articles-page img {
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-}
-
-.article-content p {
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.related-images {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.related-images img {
-  width: 48%;
-  border-radius: 6px;
-  object-fit: cover;
-}
-
-.comments-section {
-  margin-top: 2rem;
-}
-
-.comments-section input {
+  height: 200px;
   width: 100%;
-  padding: 0.6rem;
-  margin: 0.5rem 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
 }
 
-.reaction-icons button {
-  margin-right: 0.5rem;
-  padding: 0.4rem 0.6rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.related-articles {
-  margin-top: 3rem;
-}
-
-.related-articles .articles-grid {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.article-card {
-  background: #f9f9f9;
-  padding: 1rem;
-  width: 220px;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  text-align: center;
-}
-
-.article-card img {
-  width: 100%;
-  height: 120px;
+.articles-page .card-img-top {
   object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
+  height: 200px;
+  width: 100%;
 }
 
-.article-card h4 {
-  font-size: 1rem;
-  margin: 0.5rem 0 0.3rem;
+.articles-page .card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s;
 }
 
-.article-card p {
-  font-size: 0.85rem;
-  color: #777;
+.articles-page .card:hover {
+  transform: translateY(-5px);
 }
