@@ -2,6 +2,7 @@ import React from "react";
 import "./category.css";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import ChatBot from "../components/ChatBot";
 
 function CategoryPage() {
   const resources = [
@@ -18,6 +19,7 @@ function CategoryPage() {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <div className="category-container">
         <h1>Resources</h1>
         <p className="category-intro">

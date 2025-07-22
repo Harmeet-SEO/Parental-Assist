@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import "./Feedback.css";
+import ChatBot from "../components/ChatBot";
 
 export default function Feedback() {
   const [rating, setRating] = useState(0);
@@ -29,6 +30,7 @@ export default function Feedback() {
   return (
     <>
       <Navbar />
+      <ChatBot />
       <main className="feedback-page">
         <h1>Feedback & Rating</h1>
 
