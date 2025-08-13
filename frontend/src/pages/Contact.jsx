@@ -1,42 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import "./Contact.css";
 import ChatBot from "../components/ChatBot";
+import { api } from "../api"; // ✅ env-driven axios (uses REACT_APP_API_BASE_URL)
 
 export default function Contact() {
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      title: "How to manage screen time for kids?",
-      description:
-        "Looking for tips on balancing screen time and outdoor activities.",
-    },
-    {
-      id: 2,
-      title: "Best books for early learning?",
-      description: "What are some great books for 3-5 year old children?",
-    },
-  ]);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
 
   const [newQuestion, setNewQuestion] = useState({
     title: "",
     description: "",
   });
 
+  // Load from backend (and gracefully fallback if API not implemented)
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        // Preferred forum endpoint (implement on backend if not present)
+        const { data } = await api.get("/api/forum/questions");
+        if (!alive) return;
+        setQuestions(Array.isArray(data) ? data : []);
+      } catch (e1) {
+        try {
+          // Fallback to generic content so page isn’t empty in dev
+          const { data } = await api.get("/api/admin/content");
+          if (!alive) return;
+          const normalized = (data || []).slice(0, 6).map((d, i) => ({
+            id: d?._id?.$oid || d?._id || d?.id || `c_${i}`,
+            title: d?.title || "Untitled",
+            description: d?.body || "",
+          }));
+          setQuestions(normalized);
+        } catch (e2) {
+          setErr(
+            e2?.response?.data?.error ||
+              e1?.response?.data?.error ||
+              "Failed to load questions."
+          );
+        }
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   const handleChange = (e) => {
     setNewQuestion({ ...newQuestion, [e.target.name]: e.target.value });
   };
 
-  const handlePost = (e) => {
+  const handlePost = async (e) => {
     e.preventDefault();
-    if (newQuestion.title && newQuestion.description) {
-      const newEntry = {
-        id: questions.length + 1,
-        title: newQuestion.title,
-        description: newQuestion.description,
-      };
-      setQuestions([newEntry, ...questions]);
+    const title = newQuestion.title.trim();
+    const description = newQuestion.description.trim();
+    if (!title || !description) return;
+
+    try {
+      // Try real forum create endpoint
+      const { data } = await api.post("/api/forum/questions", {
+        title,
+        description,
+      });
+      // If backend returns the saved question, prepend it
+      const saved =
+        data && typeof data === "object"
+          ? data
+          : { id: `tmp_${Date.now()}`, title, description };
+      setQuestions((q) => [saved, ...q]);
       setNewQuestion({ title: "", description: "" });
+    } catch (e) {
+      // If not implemented, do local prepend so UI still works
+      setQuestions((q) => [
+        { id: `tmp_${Date.now()}`, title, description },
+        ...q,
+      ]);
+      setNewQuestion({ title: "", description: "" });
+      console.warn(
+        "Posting to /api/forum/questions failed. Added locally.",
+        e?.response?.data || e.message
+      );
     }
   };
 
@@ -47,7 +94,6 @@ export default function Contact() {
       <main className="contact-page">
         <h1>Community Forum</h1>
 
-        {/* Ask a Question Form */}
         <form className="forum-form" onSubmit={handlePost}>
           <h2>Ask a Question</h2>
           <input
@@ -64,18 +110,26 @@ export default function Contact() {
             value={newQuestion.description}
             onChange={handleChange}
             required
-          ></textarea>
+          />
           <button type="submit">Post Question</button>
         </form>
 
-        {/* List of Questions */}
+        {loading && <p>Loading…</p>}
+        {err && <div className="alert alert-danger">{err}</div>}
+
         <div className="forum-questions">
-          {questions.map((q) => (
-            <div key={q.id} className="forum-question-card">
+          {questions.map((q, i) => (
+            <div
+              key={q._id?.$oid || q._id || q.id || i}
+              className="forum-question-card"
+            >
               <h3>{q.title}</h3>
               <p>{q.description}</p>
             </div>
           ))}
+          {!loading && !err && questions.length === 0 && (
+            <p>No questions yet. Be the first to ask!</p>
+          )}
         </div>
       </main>
     </>

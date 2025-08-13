@@ -1,11 +1,21 @@
 // src/pages/ArticleListPage.jsx
 import React, { useState, useEffect } from "react";
-import { api } from "../api";
+import { api, API_BASE_URL } from "../api"; // ✅ use env-driven base for images too
 import { useNavigate } from "react-router-dom";
 import "./ArticlePage.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ChatBot from "../components/ChatBot";
+
+const joinUrl = (base, path) => {
+  const b = String(base || "").replace(/\/+$/, "");
+  const p = String(path || "");
+  if (!p) return "";
+  return `${b}${p.startsWith("/") ? "" : "/"}${p}`;
+};
+
+const toImageUrl = (val) =>
+  /^https?:\/\//i.test(val || "") ? val : joinUrl(API_BASE_URL, val || "");
 
 export default function ArticleListPage() {
   const [articles, setArticles] = useState([]);
@@ -14,21 +24,22 @@ export default function ArticleListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get("/api/admin/articles")
-      .then(res => {
-        setArticles(res.data || []);
-      })
+    api
+      .get("/api/admin/articles")
+      .then((res) => setArticles(res.data || []))
       .catch(console.error);
   }, []);
 
-  const filteredArticles = articles.filter(article => {
+  const filteredArticles = articles.filter((article) => {
+    const q = searchTerm.toLowerCase();
     const matchesSearch =
-      article.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.summary?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.body?.toLowerCase().includes(searchTerm.toLowerCase());
+      (article.title || "").toLowerCase().includes(q) ||
+      (article.summary || "").toLowerCase().includes(q) ||
+      (article.body || "").toLowerCase().includes(q);
 
     const matchesTag =
-      !filterTag || (article.tags && article.tags.toLowerCase().includes(filterTag.toLowerCase()));
+      !filterTag ||
+      (article.tags || "").toLowerCase().includes(filterTag.toLowerCase());
 
     return matchesSearch && matchesTag;
   });
@@ -46,13 +57,13 @@ export default function ArticleListPage() {
             className="form-control mb-2"
             placeholder="Search articles..."
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <input
             className="form-control"
             placeholder="Filter by tag..."
             value={filterTag}
-            onChange={e => setFilterTag(e.target.value)}
+            onChange={(e) => setFilterTag(e.target.value)}
           />
         </div>
 
@@ -61,7 +72,7 @@ export default function ArticleListPage() {
             <p>No articles match your criteria.</p>
           )}
 
-          {filteredArticles.map(article => (
+          {filteredArticles.map((article) => (
             <div
               key={article._id}
               className="col-md-6 col-lg-4 mb-4"
@@ -71,9 +82,12 @@ export default function ArticleListPage() {
               <div className="card h-100 shadow-sm">
                 {article.header_image && (
                   <img
-                    src={article.header_image}
+                    src={toImageUrl(article.header_image)}
                     alt={article.title}
                     className="card-img-top"
+                    onError={(e) => {
+                      e.currentTarget.src = "/assets/placeholder.jpg";
+                    }}
                   />
                 )}
                 <div className="card-body">

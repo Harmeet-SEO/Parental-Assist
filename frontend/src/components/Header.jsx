@@ -19,7 +19,9 @@ export default function Header() {
   return (
     <header className="login-header">
       <div className="logo-search">
-        <input type="text" placeholder="Search..." className="search-bar" />
+        {token && (
+          <input type="text" placeholder="Search..." className="search-bar" />
+        )}{" "}
         <Link to="/" className="logo">
           Parental Assist
         </Link>
@@ -44,7 +46,7 @@ export default function Header() {
           )}
 
           {/* 👇 Subscribe is always shown */}
-          <button className="subscribe-btn">Subscribe</button>
+          {/* <button className="subscribe-btn">Subscribe</button> */}
         </div>
       </div>
     </header>

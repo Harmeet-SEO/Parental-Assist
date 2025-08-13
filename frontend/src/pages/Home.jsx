@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Home.css";
 import ArticleCard from "../components/ArticleCard";
 import { Link } from "react-router-dom";
@@ -7,14 +7,50 @@ import PodcastCard from "../components/PodcastCard";
 import Navbar from "../components/Navbar";
 import HomeBanner from "../components/HomeBanner";
 import ChatBot from "../components/ChatBot";
+// import axios from "axios"; // ❌ not needed
+import { api, API_BASE_URL } from "../api"; // ✅ use env-driven base + shared axios
+
+// Join helper that avoids double slashes
+const joinUrl = (base, path) => {
+  if (!path) return "";
+  const b = String(base || "").replace(/\/+$/, "");
+  const p = String(path).startsWith("/") ? path : `/${path}`;
+  return `${b}${p}`;
+};
+
+// Build final image URL (supports absolute http(s) or relative paths)
+const toImageUrl = (val) =>
+  !val
+    ? "/assets/placeholder.jpg"
+    : /^https?:\/\//i.test(val)
+    ? val
+    : `${API_BASE_URL}${val.startsWith("/") ? "" : "/"}${val}`;
 
 const Home = () => {
+  const [tips, setTips] = useState([]);
+  const [selectedTip, setSelectedTip] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/api/admin/content")
+      .then((res) => setTips(res.data))
+      .catch((err) => console.error(err));
+
+    api
+      .get("/api/admin/articles")
+      .then((res) => setArticles(res.data || []))
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="homepage">
       {/* === NAVBAR === */}
       <Navbar />
       <HomeBanner />
       <ChatBot />
+
       {/* === MAIN CONTENT === */}
       <div className="homepage__content">
         {/* === LEFT COLUMN === */}
@@ -29,70 +65,96 @@ const Home = () => {
               image="/assets/podcast1.jpg"
             />
           </section>
-
-          {/* === LEFT ARTICLES === */}
-          {/* <div className="left-articles">
-            <ArticleCard
-              title="Best summer reads for your vacation"
-              date="13 June 2025"
-              image="/assets/article1.jpg"
-            />
-            <ArticleCard
-              title="Footballer leads Argentina to victory"
-              date="12 June 2025"
-              image="/assets/article2.jpg"
-            />
-          </div> */}
         </div>
 
         {/* === RIGHT COLUMN (FEATURED GRID) === */}
         <div className="right-column">
           <section className="featured-articles">
             <div className="article-grid">
-              <ArticleCard
-                title="Lost cat found the way back to her home"
-                date="11 June 2025"
-                image="/assets/article3.jpg"
-              />
-              <ArticleCard
-                title="Footballer leads Argentina to victory"
-                date="12 June 2025"
-                image="/assets/article2.jpg"
-              />
-              <ArticleCard
-                title="Shoemaker's herb hotdogs"
-                date="9 June 2025"
-                image="/assets/article5.jpg"
-              />
+              {articles.slice(0, 3).map((article) => {
+                const imgSrc = toImageUrl(article.header_image);
+                return (
+                  <ArticleCard
+                    key={article._id}
+                    title={article.title}
+                    date={article.date_posted}
+                    image={imgSrc}
+                  />
+                );
+              })}
             </div>
           </section>
         </div>
       </div>
 
+      {/* === PARENTING TIPS SECTION === */}
+      <section className="parenting-tips-section">
+        <h3>👨‍👩‍👧‍👦 Parenting Tips & Advice</h3>
+        <div className="tips-grid">
+          {tips.slice(2, 7).map((tip) => (
+            <div
+              key={tip._id}
+              className="tip-card"
+              onClick={() => {
+                setSelectedTip(tip);
+                setShowModal(true);
+              }}
+            >
+              <h4>{tip.title}</h4>
+              <p>{tip.body.slice(0, 100)}...</p>
+              <small className="category-badge">
+                {tip.category || "General"}
+              </small>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {showModal && selectedTip && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setShowModal(false)}>
+              ✖
+            </button>
+            <h2>{selectedTip.title}</h2>
+            <small className="category-badge">{selectedTip.category}</small>
+            <p style={{ marginTop: "1rem" }}>{selectedTip.body}</p>
+            <p className="tip-date">
+              Published:{" "}
+              {new Date(
+                selectedTip.created_at?.$date || selectedTip.created_at
+              ).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* === FOOD AND DRINK === */}
       <section className="food-section">
         <h3>Food and Drink</h3>
         <div className="article-row">
-          <ArticleCard
-            title="Cooking on a budget"
-            date="8 June 2025"
-            image="/assets/article6.jpg"
-          />
-          <ArticleCard
-            title="Best alcohol-free cocktails"
-            date="7 June 2025"
-            image="/assets/article7.jpg"
-          />
-          <ArticleCard
-            title="Best summer reads for your vacation"
-            date="13 June 2025"
-            image="/assets/article1.jpg"
-          />
-          <ArticleCard
-            title="Footballer leads Argentina to victory"
-            date="12 June 2025"
-            image="/assets/article2.jpg"
-          />
+          {articles
+            .filter(
+              (a) =>
+                a.tags?.toLowerCase().includes("food") ||
+                a.tags?.includes("drink")
+            )
+            .slice(0, 4)
+            .map((article) => {
+              const imgSrc = toImageUrl(article.header_image);
+              return (
+                <ArticleCard
+                  key={article._id}
+                  title={article.title}
+                  date={article.date_posted}
+                  image={imgSrc}
+                />
+              );
+            })}
         </div>
       </section>
 

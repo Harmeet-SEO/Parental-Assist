@@ -1,0 +1,20 @@
+.tip-detail-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+}
+
+.tip-body {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.tip-date {
+  margin-top: 1rem;
+  color: #666;
+}
+
+.tip-card-link {
+  text-decoration: none;
+  color: inherit;
+}

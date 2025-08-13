@@ -1,11 +1,40 @@
-import React from "react";
+// src/pages/Podcasts.jsx
+import React, { useEffect, useState } from "react";
 import "./podcasts.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ChatBot from "../components/ChatBot";
+import { api, API_BASE_URL } from "../api";
 
-const Podcasts = () => {
-  const podcasts = [
+const categories = [
+  { id: 1, emoji: "🧘‍♂️", name: "Meditation" },
+  { id: 2, emoji: "📣", name: "Daily Update" },
+  { id: 3, emoji: "🎧", name: "Storytime" },
+  { id: 4, emoji: "🍎", name: "Parent Tips" },
+  { id: 5, emoji: "👨‍👩‍👧", name: "Education" },
+  { id: 6, emoji: "🧠", name: "Mental Wellness" },
+];
+
+const joinUrl = (base, path) => {
+  const b = String(base || "").replace(/\/+$/, "");
+  const p = String(path || "");
+  if (!p) return "";
+  return `${b}${p.startsWith("/") ? "" : "/"}${p}`;
+};
+const toImg = (val) =>
+  /^https?:\/\//i.test(val || "")
+    ? val
+    : val
+    ? joinUrl(API_BASE_URL, val)
+    : "/assets/placeholder.jpg";
+
+export default function Podcasts() {
+  const [pods, setPods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+  // hardcoded fallback (your current list)
+  const fallback = [
     {
       id: 1,
       title: "Morning Motivation",
@@ -44,51 +73,89 @@ const Podcasts = () => {
     },
   ];
 
-  const categories = [
-    { id: 1, emoji: "🧘‍♂️", name: "Meditation" },
-    { id: 2, emoji: "📣", name: "Daily Update" },
-    { id: 3, emoji: "🎧", name: "Storytime" },
-    { id: 4, emoji: "🍎", name: "Parent Tips" },
-    { id: 5, emoji: "👨‍👩‍👧", name: "Education" },
-    { id: 6, emoji: "🧠", name: "Mental Wellness" },
-  ];
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        // Preferred: a dedicated endpoint
+        // Expected item shape: { id, title, image, link }
+        const { data } = await api.get("/api/podcasts");
+        if (!alive) return;
+        setPods(Array.isArray(data) ? data : fallback);
+      } catch {
+        try {
+          // Fallback: reuse articles tagged "podcast"
+          const { data } = await api.get("/api/admin/articles");
+          if (!alive) return;
+          const normalized = (data || [])
+            .filter((a) => (a?.tags || "").toLowerCase().includes("podcast"))
+            .slice(0, 12)
+            .map((a, i) => ({
+              id: a?._id?.$oid || a?._id || a?.id || `a_${i}`,
+              title: a?.title || "Untitled",
+              image: a?.header_image || "",
+              link: a?.external_url || "#",
+            }));
+          setPods(normalized.length ? normalized : fallback);
+        } catch (e2) {
+          setErr(
+            e2?.response?.data?.error ||
+              e2.message ||
+              "Failed to load podcasts."
+          );
+          setPods(fallback);
+        }
+      } finally {
+        if (alive) setLoading(false);
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   return (
     <>
       <Navbar />
       <ChatBot />
+
       <div className="podcast-container">
         <h1>Podcasts</h1>
         <p>
           At <strong>Parental Assist</strong>, we bring you the best of
-          easy-to-listen podcasts, featuring expert advice, parenting hacks,
-          mindful storytelling, and real-life family experiences. Each episode
-          is designed to help parents feel informed, supported, and encouraged
-          in their journey. Subscribe today and never miss a moment of
-          inspiration!
+          easy-to-listen podcasts…
         </p>
 
         <hr style={{ margin: "2rem 0" }} />
 
-        {/* === Latest Episodes === */}
         <h2>Latest episodes</h2>
+        {loading && <p>Loading…</p>}
+        {err && <div className="alert alert-warning">{err}</div>}
+
         <div className="podcast-grid">
-          {podcasts.map((pod) => (
+          {pods.map((pod, i) => (
             <a
-              href={pod.link}
+              href={pod.link || "#"}
               target="_blank"
               rel="noopener noreferrer"
-              key={pod.id}
+              key={pod.id || i}
               className="podcast-card"
+              aria-label={`Open ${pod.title}`}
             >
-              <img src={pod.img} alt={pod.title} className="podcast-image" />
+              <img
+                src={toImg(pod.image || pod.img)}
+                alt={pod.title}
+                className="podcast-image"
+                onError={(e) => {
+                  e.currentTarget.src = "/assets/placeholder.jpg";
+                }}
+              />
               <div className="podcast-title">{pod.title}</div>
               <div className="play-button">▶</div>
             </a>
           ))}
         </div>
 
-        {/* === Categories === */}
         <h2 style={{ marginTop: "3rem" }}>Categories</h2>
         <div className="podcast-categories">
           {categories.map((cat) => (
@@ -99,9 +166,8 @@ const Podcasts = () => {
           ))}
         </div>
       </div>
+
       <Footer />
     </>
   );
-};
-
-export default Podcasts;
+}

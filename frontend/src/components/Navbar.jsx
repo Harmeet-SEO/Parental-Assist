@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
 import "./Navbar.css";
 import SearchSuggestions from "./SearchSuggestions";
-import productsData from "../data/productsData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 export default function Navbar() {
@@ -25,9 +24,6 @@ export default function Navbar() {
   };
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchTerm)}`);
-    }
   };
 
   const handleInputChange = (e) => {
@@ -37,20 +33,13 @@ export default function Navbar() {
     if (term.length > 1) {
       const lowerTerm = term.toLowerCase();
 
-      const productResults = productsData
-        .filter((p) => p.name?.toLowerCase().includes(lowerTerm))
-        .map((p) => ({
-          label: p.name,
-          link: `/products?search=${encodeURIComponent(p.name)}`,
-        }));
-
       const articleResults = [
         { label: "Lost cat found the way back to her home", link: "/articles" },
         { label: "10 parenting hacks", link: "/articles" },
         { label: "Balancing work and family", link: "/articles" },
       ].filter((a) => a.label.toLowerCase().includes(lowerTerm));
 
-      setSuggestions([...productResults, ...articleResults]);
+      setSuggestions([...articleResults]);
     } else {
       setSuggestions([]);
     }
@@ -63,27 +52,29 @@ export default function Navbar() {
         <span>Parental Assist</span>
       </div>
 
-      <div className="search-wrapper">
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            placeholder="Search products or articles..."
-            value={searchTerm}
-            onChange={handleInputChange}
+      {/* 👇 Only show if logged in */}
+      {isLoggedIn && (
+        <div className="search-wrapper">
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="text"
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={handleInputChange}
+            />
+            <button type="submit">Search</button>
+          </form>
+          <SearchSuggestions
+            results={suggestions}
+            onClose={() => setSuggestions([])}
           />
-          <button type="submit">Search</button>
-        </form>
-        <SearchSuggestions
-          results={suggestions}
-          onClose={() => setSuggestions([])}
-        />
-      </div>
+        </div>
+      )}
 
       <div className="nav-links">
         <Link to="/">
           <FaHome size={18} />
         </Link>
-        <Link to="/products">Products</Link>
         <Link to="/articles">Articles</Link>
         <Link to="/podcasts">Podcasts</Link>
         <Link to="/contact">Contact Us</Link>

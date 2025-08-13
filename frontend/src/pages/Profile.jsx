@@ -25,11 +25,9 @@ export default function Profile() {
     const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
 
-    fetch("http://localhost:5000/api/user", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data) => {
+    api
+      .get("/api/user")
+      .then(({ data }) => {
         setUser(data);
         setFormData(data);
       })
@@ -38,6 +36,7 @@ export default function Profile() {
         navigate("/login");
       });
   }, [navigate]);
+  console.log("user", user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,17 +46,10 @@ export default function Profile() {
   const handleSave = () => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/user/update", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((res) => res.json())
-      .then((updatedUser) => {
-        setUser(updatedUser);
+    api
+      .put("/api/user/update", formData)
+      .then(({ data }) => {
+        setUser(data);
         setEditing(false);
       })
       .catch(() => alert("Failed to update profile."));

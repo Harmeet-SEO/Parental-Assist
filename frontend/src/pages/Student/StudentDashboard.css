@@ -1,0 +1,69 @@
+.student-dashboard {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.student-welcome {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.student-age {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+}
+
+.progress-section,
+.badges-section {
+  margin-bottom: 2rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.filled-bar {
+  height: 100%;
+  background-color: #4caf50;
+  transition: width 0.5s ease;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.badge-list li {
+  background: #ffd54f;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.activity-btn {
+  background-color: #2196f3;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.activity-btn:hover {
+  background-color: #1976d2;
+}

@@ -6,13 +6,13 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #f5f7fa;
   color: #333;
 }
 
 a {
-  color: #6C63FF;
+  color: #6c63ff;
   text-decoration: none;
 }
 
@@ -76,7 +76,7 @@ a:hover {
 
 .login-form-new input:focus {
   outline: none;
-  border-color: #6C63FF;
+  border-color: #6c63ff;
 }
 
 .password-field {
@@ -89,13 +89,13 @@ a:hover {
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: #6C63FF;
+  color: #6c63ff;
   font-size: 0.85rem;
   user-select: none;
 }
 
 .login-btn {
-  background: #6C63FF;
+  background: #6c63ff;
   color: #fff;
   border: none;
   padding: 0.85rem 1rem;
