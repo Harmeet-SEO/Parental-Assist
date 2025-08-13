@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "classnames": "^2.5.1",
+    "cloudinary": "^1.41.3",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "react-phone-input-2": "^2.15.1"
   }
 }

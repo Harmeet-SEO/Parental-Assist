@@ -7,6 +7,7 @@ from flask import request, jsonify
 from werkzeug.utils import secure_filename
 from flask import request, jsonify, current_app
 
+
 admin_routes = Blueprint("admin_routes", __name__)
 UPLOAD_FOLDER = "static/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
