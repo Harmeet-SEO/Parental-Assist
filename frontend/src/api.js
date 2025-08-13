@@ -49,7 +49,7 @@ export const joinUrl = (base, path) => {
 // - Prefixes known backend paths (/uploads, /media, etc.) with API_BASE_URL
 export const toImageUrl = (val) => {
   const p = (val || "").trim();
-  if (!p) return "/assets/placeholder.jpg";
+  if (!p) return "/assets/profile-profile-placeholder.jpg";
   if (/^https?:\/\//i.test(p)) return p;
   if (p.startsWith("/assets") || p.startsWith("assets/")) return p; // frontend public
   if (

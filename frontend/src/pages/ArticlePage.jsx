@@ -86,7 +86,7 @@ export default function ArticleListPage() {
                     alt={article.title}
                     className="card-img-top"
                     onError={(e) => {
-                      e.currentTarget.src = "/assets/placeholder.jpg";
+                      e.currentTarget.src = "/assets/profile-placeholder.jpg";
                     }}
                   />
                 )}

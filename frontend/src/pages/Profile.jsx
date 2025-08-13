@@ -72,7 +72,7 @@ export default function Profile() {
           {user ? (
             <div className="profile-card">
               <img
-                src="/assets/profile-placeholder.jpg"
+                src="/assets/profile-profile-placeholder.jpg"
                 alt="Profile Avatar"
                 className="profile-avatar"
               />

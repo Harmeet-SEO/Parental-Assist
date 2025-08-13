@@ -26,7 +26,7 @@ const toImg = (val) =>
     ? val
     : val
     ? joinUrl(API_BASE_URL, val)
-    : "/assets/placeholder.jpg";
+    : "/assets/profile-placeholder.jpg";
 
 export default function Podcasts() {
   const [pods, setPods] = useState([]);
@@ -79,9 +79,18 @@ export default function Podcasts() {
       try {
         // Preferred: a dedicated endpoint
         // Expected item shape: { id, title, image, link }
-        const { data } = await api.get("/api/podcasts");
+        const { data } = await api.get("/api/admin/articles");
         if (!alive) return;
-        setPods(Array.isArray(data) ? data : fallback);
+        const normalized = (data || [])
+          .filter((a) => (a?.tags || "").toLowerCase().includes("podcast"))
+          .slice(0, 12)
+          .map((a, i) => ({
+            id: a?._id?.$oid || a?._id || a?.id || `a_${i}`,
+            title: a?.title || "Untitled",
+            image: a?.header_image || "",
+            link: a?.external_url || "#",
+          }));
+        setPods(normalized.length ? normalized : fallback);
       } catch {
         try {
           // Fallback: reuse articles tagged "podcast"
@@ -147,7 +156,7 @@ export default function Podcasts() {
                 alt={pod.title}
                 className="podcast-image"
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/placeholder.jpg";
+                  e.currentTarget.src = "/assets/profile-placeholder.jpg";
                 }}
               />
               <div className="podcast-title">{pod.title}</div>

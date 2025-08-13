@@ -134,7 +134,7 @@ export default function AddEditArticle() {
               alt="Header"
               style={{ maxWidth: "200px", display: "block" }}
               onError={(e) => {
-                e.currentTarget.src = "/assets/placeholder.jpg";
+                e.currentTarget.src = "/assets/profile-placeholder.jpg";
               }}
             />
           )}

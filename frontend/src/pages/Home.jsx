@@ -21,7 +21,7 @@ const joinUrl = (base, path) => {
 // Build final image URL (supports absolute http(s) or relative paths)
 const toImageUrl = (val) =>
   !val
-    ? "/assets/placeholder.jpg"
+    ? "/assets/profile-placeholder.jpg"
     : /^https?:\/\//i.test(val)
     ? val
     : `${API_BASE_URL}${val.startsWith("/") ? "" : "/"}${val}`;

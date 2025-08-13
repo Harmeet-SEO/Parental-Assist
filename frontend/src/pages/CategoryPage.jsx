@@ -18,7 +18,7 @@ const toImageUrl = (val) =>
     ? val
     : val
     ? joinUrl(API_BASE_URL, val)
-    : "/assets/placeholder.jpg";
+    : "/assets/profile-placeholder.jpg";
 
 export default function CategoryPage() {
   const [items, setItems] = useState([]);
